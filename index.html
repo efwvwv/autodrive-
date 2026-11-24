@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AutoDrive — пригон автомобилей под ключ из Европы." />
+  <title>AutoDrive — Пригон автомобилей из Европы</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ВАШИ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ, НО Я ДОБАВИЛ СТИЛИ ДЛЯ MAX И ОТЗЫВОВ */
+    :root{
+      --graphite-950:#0b0d10; --graphite-900:#101318; --graphite-850:#14181f;
+      --graphite-800:#1a1f27; --graphite-700:#232a35; --graphite-600:#2e3644;
+      --line:#2a313c; --text:#e9edf3; --text-soft:#a7b0bd; --text-mute:#6f7a89;
+      --accent:#ff5a1f; --accent-2:#ff8a4c; --accent-glow:rgba(255,90,31,.35);
+      --success:#22c55e; --danger:#ef4444; --radius:16px; --radius-sm:10px;
+      --radius-lg:24px; --shadow:0 20px 60px -20px rgba(0,0,0,.6);
+      --font:"Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-display:"Unbounded", "Manrope", sans-serif;
+      --container:1240px; --header-h:76px; --transition:.25s cubic-bezier(.4,0,.2,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--graphite-950);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    img{max-width:100%;display:block} a{color:inherit;text-decoration:none}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+    input,select,textarea{font-family:inherit;font-size:inherit} ul,ol{list-style:none}
+    .container{width:100%;max-width:var(--container);margin:0 auto;padding:0 24px}
+    h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;line-height:1.15;letter-spacing:-.02em}
+    .accent{color:var(--accent)}
+    .eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
+    .section__title{font-size:clamp(1.7rem,3.6vw,2.6rem);margin-bottom:14px}
+    .section__lead{color:var(--text-soft);max-width:640px;font-size:1.02rem}
+    .section__head{max-width:760px;margin-bottom:44px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:var(--transition);white-space:nowrap;border:1px solid transparent;}
+    .btn--accent{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 10px 28px -10px var(--accent-glow);}
+    .btn--accent:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px var(--accent-glow)}
+    .btn--ghost{background:transparent;border-color:var(--line);color:var(--text)}
+    .btn--ghost:hover{background:var(--graphite-800);border-color:var(--graphite-600)}
+    .btn--outline{background:transparent;border-color:var(--accent);color:var(--accent)}
+    .btn--outline:hover{background:var(--accent);color:#fff}
+    .btn--lg{padding:16px 30px;font-size:1rem} .btn--sm{padding:8px 16px;font-size:.85rem} .btn--block{width:100%}
+    
+    .header{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--header-h);background:rgba(11,13,16,.72);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:var(--transition);}
+    .header.is-scrolled{background:rgba(11,13,16,.94);border-bottom-color:var(--line)}
+    .header__inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo__mark{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));font-family:var(--font-display);font-weight:700;color:#fff;font-size:1.05rem;box-shadow:0 8px 20px -8px var(--accent-glow);}
+    .logo__text{display:flex;flex-direction:column;font-family:var(--font-display);font-weight:600;font-size:1.05rem;line-height:1}
+    .logo__text small{font-family:var(--font);font-size:.6rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mute);margin-top:4px}
+    .nav{display:flex;gap:26px}
+    .nav__link{font-size:.92rem;font-weight:600;color:var(--text-soft);position:relative;transition:var(--transition)}
+    .nav__link:hover{color:var(--text)}
+    .nav__link::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--accent);transition:var(--transition);border-radius:2px;}
+    .nav__link:hover::after{width:100%}
+    .header__actions{display:flex;align-items:center;gap:18px}
+    
+    /* ИКОНКА MAX */
+    .header__max{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.95rem;white-space:nowrap;color:var(--text-soft);transition:var(--transition)}
+    .header__max:hover{color:var(--accent)}
+    .header__max svg{width:32px;height:32px;flex-shrink:0}
+
+    .burger{display:none;flex-direction:column;gap:5px;width:40px;height:40px;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--line)}
+    .burger span{width:20px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition)}
+    
+    .hero{position:relative;padding:calc(var(--header-h) + 70px) 0 90px;overflow:hidden;background-image: url('https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=1920&auto=format&fit=crop');background-size: cover;background-position: center right;background-repeat: no-repeat;}
+    .hero::before {content: "";position: absolute;inset: 0;background: linear-gradient(90deg, var(--graphite-950) 40%, rgba(11,13,16,0.7) 70%, rgba(11,13,16,0.2) 100%);z-index: 0;}
+    .hero__inner{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:start}
+    .badge{display:inline-block;padding:8px 16px;border-radius:999px;background:rgba(255,90,31,.1);border:1px solid rgba(255,90,31,.3);color:var(--accent-2);font-size:.8rem;font-weight:700;letter-spacing:.02em;margin-bottom:22px; backdrop-filter: blur(4px);}
+    .hero__title{font-size:clamp(2rem,4.8vw,3.6rem);margin-bottom:22px}
+    .hero__subtitle{color:var(--text-soft);font-size:1.08rem;max-width:600px;margin-bottom:32px}
+    .hero__actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+    .hero__stats{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;padding-top:30px;border-top:1px solid var(--line); max-width: 700px;}
+    .hero__stats li{display:flex;flex-direction:column;gap:4px}
+    .hero__stats strong{font-family:var(--font-display);font-size:1.55rem;color:var(--text)}
+    .hero__stats span{font-size:.82rem;color:var(--text-mute)}
+    
+    .field{display:flex;flex-direction:column;gap:8px;font-size:.85rem;color:var(--text-soft);font-weight:600}
+    .field > span{font-size:.8rem;letter-spacing:.02em}
+    .field input,.field select,.field textarea{width:100%;background:var(--graphite-800);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;color:var(--text);font-size:.95rem;outline:none;transition:var(--transition);}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,90,31,.18);}
+    .field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a7b0bd' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;padding-right:38px;}
+    .field--range input[type=range]{-webkit-appearance:none;appearance:none;height:6px;padding:0;border:none;background:var(--graphite-700);border-radius:99px;}
+    .field--range input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:3px solid var(--graphite-900);box-shadow:0 0 0 1px var(--accent),0 6px 16px -4px var(--accent-glow);cursor:pointer;}
+    
+    .section{padding:96px 0} .section:nth-child(even){background:var(--graphite-900)} .countries{background:var(--graphite-900)}
+    .countries__grid{display:grid;grid-template-columns:1fr; gap:20px; max-width: 500px;}
+    .country-card{background:linear-gradient(180deg,var(--graphite-850),var(--graphite-900));border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;transition:var(--transition);display:flex;flex-direction:column;}
+    .country-card:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:var(--shadow)}
+    .country-card__flag{font-size:2.2rem;margin-bottom:16px} .country-card h3{font-size:1.2rem;margin-bottom:10px}
+    .country-card p{color:var(--text-soft);font-size:.9rem;margin-bottom:16px;flex:0 0 auto}
+    .country-card ul{display:flex;flex-direction:column;gap:6px;margin-bottom:22px;flex:1}
+    .country-card ul li{font-size:.83rem;color:var(--text-mute);padding-left:16px;position:relative}
+    .country-card ul li::before{content:"•";position:absolute;left:0;color:var(--accent)}
+    .country-card__btn{align-self:flex-start;font-weight:700;font-size:.85rem;color:var(--accent);padding:8px 0;border-bottom:1px solid transparent;transition:var(--transition);}
+    .country-card__btn:hover{border-bottom-color:var(--accent)}
+    
+    .filters{background:var(--graphite-850);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:28px;display:flex;flex-direction:column;gap:18px;}
+    .filters__row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:end}
+    .filters__row--range{grid-template-columns:2fr 1fr auto}
+    .catalog__meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;color:var(--text-soft);font-size:.9rem}
+    .catalog__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .car-card{background:linear-gradient(180deg,var(--graphite-850),var(--graphite-900));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:var(--transition);position:relative;}
+    .car-card:hover{transform:translateY(-6px);border-color:var(--graphite-600);box-shadow:var(--shadow)}
+    .car-card__media{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--graphite-800)}
+    .car-card__media img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+    .car-card:hover .car-card__media img{transform:scale(1.05)}
+    .car-card__country{position:absolute;top:14px;left:14px;padding:6px 12px;border-radius:999px;background:rgba(11,13,16,.8);backdrop-filter:blur(8px);font-size:.75rem;font-weight:700;border:1px solid var(--line);}
+    .car-card__fav{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:rgba(11,13,16,.75);backdrop-filter:blur(8px);display:grid;place-items:center;font-size:1.05rem;transition:var(--transition);border:1px solid var(--line);}
+    .car-card__fav:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .car-card__fav.is-active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .car-card__body{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
+    .car-card__title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;line-height:1.25}
+    .car-card__meta{display:flex;flex-wrap:wrap;gap:8px}
+    .car-card__meta span{font-size:.75rem;color:var(--text-soft);background:var(--graphite-800);border:1px solid var(--line);padding:5px 10px;border-radius:999px;}
+    .car-card__footer{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .car-card__price{font-family:var(--font-display);font-size:1.2rem;color:var(--text)}
+    .car-card__price small{display:block;font-family:var(--font);font-size:.72rem;color:var(--text-mute);font-weight:500}
+    .car-card__btn{padding:10px 16px;font-size:.82rem}
+    .catalog__more{text-align:center;margin-top:40px}
+    .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-mute)}
+    
+    .steps__list{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .step{background:linear-gradient(180deg,var(--graphite-850),var(--graphite-900));border:1px solid var(--line);border-radius:var(--radius);padding:28px;position:relative;overflow:hidden;transition:var(--transition);}
+    .step:hover{border-color:var(--accent);transform:translateY(-4px)}
+    .step__num{font-family:var(--font-display);font-size:2.4rem;font-weight:700;color:transparent;-webkit-text-stroke:1.5px var(--accent);opacity:.7;display:block;margin-bottom:14px;line-height:1;}
+    .step h3{font-size:1.1rem;margin-bottom:8px} .step p{color:var(--text-soft);font-size:.9rem}
+    
+    .advantages__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .advantage{background:var(--graphite-850);border:1px solid var(--line);border-radius:var(--radius);padding:28px;transition:var(--transition);}
+    .advantage:hover{border-color:var(--accent);transform:translateY(-4px)}
+    .advantage__ico{font-size:1.8rem;display:block;margin-bottom:14px} .advantage h3{font-size:1.05rem;margin-bottom:8px} .advantage p{color:var(--text-soft);font-size:.9rem}
+    
+    /* ОТЗЫВЫ */
+    .reviews__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .review{background:linear-gradient(180deg,var(--graphite-850),var(--graphite-900));border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px;}
+    .review__stars{color:var(--accent);letter-spacing:3px;font-size:1.05rem}
+    .review p{color:var(--text-soft);font-size:.92rem;flex:1}
+    .review__author{display:flex;align-items:center;gap:12px;padding-top:14px;border-top:1px solid var(--line)}
+    .avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:700;font-size:.85rem;flex-shrink:0;}
+    .review__author b{display:block;font-size:.92rem} .review__author small{color:var(--text-mute);font-size:.78rem}
+    .reviews__more{text-align:center;margin-top:40px}
+
+    /* КОНТАКТЫ */
+    .contact__inner{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
+    .contact__list{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+    .contact__list li{display:flex;align-items:center;gap:12px;color:var(--text-soft);font-size:.95rem}
+    .contact__max-card{background:linear-gradient(160deg,var(--graphite-850),var(--graphite-900));border:1px solid var(--line);border-radius:var(--radius-lg);padding:40px 36px;display:flex;flex-direction:column;gap:22px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+    .contact__max-card::before{content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none;}
+    .contact__max-head{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
+    .contact__max-ico{width:64px;height:64px;border-radius:18px;flex-shrink:0;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 12px 28px -10px var(--accent-glow);}
+    .contact__max-ico svg{width:36px;height:36px}
+    .contact__max-head h3{font-size:1.3rem;margin-bottom:4px}
+    .contact__max-head p{color:var(--text-soft);font-size:.9rem}
+    .contact__max-text{color:var(--text-soft);font-size:.98rem;line-height:1.6;position:relative;z-index:1}
+    .contact__max-card .btn{position:relative;z-index:1}
+
+    .footer{background:var(--graphite-900);border-top:1px solid var(--line);padding:56px 0 0}
+    .footer__inner{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:40px}
+    .footer__brand p{color:var(--text-mute);font-size:.88rem;margin-top:16px;max-width:280px}
+    .footer h4{font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-mute);margin-bottom:16px}
+    .footer__nav,.footer__contacts{display:flex;flex-direction:column;gap:10px}
+    .footer__nav a,.footer__contacts span{color:var(--text-soft);font-size:.9rem;transition:var(--transition)}
+    .footer__nav a:hover{color:var(--accent)}
+    .footer__bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 24px;border-top:1px solid var(--line);color:var(--text-mute);font-size:.8rem;}
+    
+    .modal{position:fixed;inset:0;z-index:200;display:none} .modal.is-open{display:block}
+    .modal__overlay{position:absolute;inset:0;background:rgba(5,6,8,.75);backdrop-filter:blur(6px);animation:fade .25s ease}
+    .modal__box{position:relative;z-index:1;max-width:560px;width:calc(100% - 32px);margin:8vh auto 0;background:linear-gradient(180deg,var(--graphite-850),var(--graphite-900));border:1px solid var(--line);border-radius:var(--radius-lg);padding:36px;box-shadow:var(--shadow);animation:pop .3s cubic-bezier(.34,1.56,.64,1);max-height:84vh;overflow:auto;}
+    .modal__close{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;background:var(--graphite-800);border:1px solid var(--line);display:grid;place-items:center;transition:var(--transition);font-size:.9rem;}
+    .modal__close:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .modal-car__media{aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;margin-bottom:20px;background:var(--graphite-800)}
+    .modal-car__media img{width:100%;height:100%;object-fit:cover}
+    .modal-car__specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+    .modal-car__specs div{background:var(--graphite-800);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.85rem;color:var(--text-soft);}
+    .modal-car__specs b{display:block;color:var(--text);font-size:.95rem;margin-top:2px}
+    .modal-car__price{font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-bottom:18px}
+    
+    .toasts{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:12px;max-width:360px}
+    .toast{background:var(--graphite-800);border:1px solid var(--line);border-left:4px solid var(--success);border-radius:12px;padding:14px 18px;font-size:.9rem;box-shadow:var(--shadow);animation:slideIn .3s ease;display:flex;gap:10px;align-items:flex-start;}
+    .toast.is-error{border-left-color:var(--danger)}
+    
+    @keyframes fade{from{opacity:0}to{opacity:1}}
+    @keyframes pop{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+    @keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+    
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.is-visible{opacity:1;transform:none}
+    
+    @media (max-width:1100px){
+      .hero__inner{grid-template-columns:1fr;gap:40px}
+      .hero::before { background: linear-gradient(0deg, var(--graphite-950) 50%, rgba(11,13,16,0.6) 100%); }
+      .countries__grid{max-width: 100%;}
+      .catalog__grid{grid-template-columns:repeat(2,1fr)}
+      .steps__list{grid-template-columns:repeat(2,1fr)} .advantages__grid{grid-template-columns:repeat(2,1fr)}
+      .reviews__grid{grid-template-columns:1fr} .contact__inner{grid-template-columns:1fr;gap:36px}
+    }
+    @media (max-width:860px){
+      .nav{position:fixed;top:var(--header-h);left:0;right:0;background:var(--graphite-900);border-bottom:1px solid var(--line);flex-direction:column;gap:0;padding:12px 24px 24px;transform:translateY(-12px);opacity:0;pointer-events:none;transition:var(--transition);}
+      .nav.is-open{transform:none;opacity:1;pointer-events:auto}
+      .nav__link{padding:14px 0;border-bottom:1px solid var(--line)}
+      .burger{display:flex} .header__cta{display:none}
+      .filters__row{grid-template-columns:1fr 1fr} .filters__row--range{grid-template-columns:1fr} .hero__stats{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:640px){
+      :root{--header-h:66px} .container{padding:0 18px} .section{padding:64px 0}
+      .catalog__grid,.steps__list,.advantages__grid{grid-template-columns:1fr}
+      .filters__row{grid-template-columns:1fr}
+      .hero{padding-top:calc(var(--header-h) + 44px)} .hero__actions .btn{width:100%}
+      .footer__inner{grid-template-columns:1fr} .modal__box{padding:28px 22px;margin-top:4vh}
+      .toasts{left:16px;right:16px;bottom:16px;max-width:none}
+      .contact__max-card{padding:28px 24px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#hero" class="logo" aria-label="AutoDrive — на главную">
+        <span class="logo__mark">AD</span>
+        <span class="logo__text">AutoDrive<small>import&nbsp;from&nbsp;europe</small></span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#catalog" class="nav__link">Каталог</a>
+        <a href="#countries" class="nav__link">Направления</a>
+        <a href="#steps" class="nav__link">Как это работает</a>
+        <a href="#reviews" class="nav__link">Отзывы</a>
+        <a href="#contact" class="nav__link">Контакты</a>
+      </nav>
+
+      <div class="header__actions">
+        <!-- ВМЕСТО ТЕЛЕФОНА - ИКОНКА MAX -->
+        <a class="header__max" href="https://max.ru/u/f9LHodD0cOKCW0QXQMtYGIliqFM8HImAp_SXC81-MX50TsElWm4CZVcckRY" target="_blank" rel="noopener" aria-label="Написать в MAX">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="48" height="48" rx="12" fill="url(#maxGrad)"/>
+            <path d="M14 32V17.5c0-1.1.9-2 2-2h1.6c.7 0 1.3.3 1.7.9L24 23l4.7-6.6c.4-.6 1-.9 1.7-.9H32c1.1 0 2 .9 2 2V32h-4V23.2l-4.2 5.9c-.4.6-1 .9-1.8.9s-1.4-.3-1.8-.9L18 23.2V32h-4z" fill="#fff"/>
+            <defs>
+              <linearGradient id="maxGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff5a1f"/>
+                <stop offset="1" stop-color="#ff8a4c"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </a>
+        <button class="btn btn--accent header__cta" data-open-modal="callback">Оставить заявку</button>
+        <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <span class="badge">✓ Более 12 лет на рынке · 4 800+ авто пригнано</span>
+        <h1 class="hero__title">
+          Автомобиль мечты<br />
+          <span class="accent">под ключ</span> из Европы
+        </h1>
+        <p class="hero__subtitle">
+          Подбираем, проверяем, покупаем и доставляем авто из Европы.
+          Таможня, СБКТС, ЭПТС и постановка на учёт — всё под ключ. Экономия до 40% от цены в салоне.
+        </p>
+        <div class="hero__actions">
+          <button class="btn btn--accent btn--lg" data-open-modal="callback">Подобрать автомобиль</button>
+          <a href="#catalog" class="btn btn--ghost btn--lg">Смотреть каталог →</a>
+        </div>
+        <ul class="hero__stats">
+          <li><strong>4 800+</strong><span>авто доставлено</span></li>
+          <li><strong>12 лет</strong><span>на рынке</span></li>
+          <li><strong>до 40%</strong><span>экономия</span></li>
+          <li><strong>30 дней</strong><span>средний срок</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- НАПРАВЛЕНИЯ -->
+  <section class="section countries" id="countries">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">Направления</span>
+        <h2 class="section__title">Откуда пригоняем</h2>
+        <p class="section__lead">Работаем с проверенными аукционами и дилерами в Европе</p>
+      </div>
+      <div class="countries__grid">
+        <article class="country-card" data-country="eu">
+          <div class="country-card__flag">🇪🇺</div>
+          <h3>Европа</h3>
+          <p>Германия, Италия, Франция, Нидерланды. Немецкий автопром и премиум-класс.</p>
+          <ul>
+            <li>Без пробега по РФ</li>
+            <li>Сервисная история</li>
+            <li>Срок 25–40 дней</li>
+          </ul>
+          <button class="country-card__btn" data-filter-country="eu">Смотреть авто →</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- КАТАЛОГ -->
+  <section class="section catalog" id="catalog">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">Каталог</span>
+        <h2 class="section__title">Автомобили под заказ</h2>
+        <p class="section__lead">Актуальные лоты под пригон. Цены указаны «под ключ» до вашего города.</p>
+      </div>
+
+      <div class="filters">
+        <div class="filters__row">
+          <label class="field"><span>Поиск</span><input type="search" id="searchInput" placeholder="BMW, Audi, Mercedes…" autocomplete="off" /></label>
+          <label class="field"><span>Страна</span>
+            <select id="filterCountry"><option value="all">Все страны</option><option value="eu">Европа</option></select>
+          </label>
+          <label class="field"><span>Тип кузова</span>
+            <select id="filterBody">
+              <option value="all">Любой</option><option value="Седан">Седан</option><option value="Кроссовер">Кроссовер</option>
+              <option value="Внедорожник">Внедорожник</option><option value="Хэтчбек">Хэтчбек</option><option value="Купе">Купе</option>
+              <option value="Универсал">Универсал</option><option value="Лифтбек">Лифтбек</option><option value="Пикап">Пикап</option><option value="Минивэн">Минивэн</option>
+            </select>
+          </label>
+          <label class="field"><span>Двигатель</span>
+            <select id="filterFuel">
+              <option value="all">Любой</option><option value="Бензин">Бензин</option><option value="Дизель">Дизель</option>
+              <option value="Гибрид">Гибрид</option><option value="Электро">Электро</option>
+            </select>
+          </label>
+        </div>
+        <div class="filters__row filters__row--range">
+          <label class="field field--range">
+            <span>Цена до: <b id="priceLabel">5 000 000 ₽</b></span>
+            <input type="range" id="filterPrice" min="500000" max="5000000" step="50000" value="5000000" />
+          </label>
+          <label class="field"><span>Сортировка</span>
+            <select id="sortBy">
+              <option value="popular">По популярности</option><option value="price-asc">Цена: по возрастанию</option>
+              <option value="price-desc">Цена: по убыванию</option><option value="year-desc">Год: новее</option>
+            </select>
+          </label>
+          <button class="btn btn--ghost filters__reset" id="resetFilters">Сбросить</button>
+        </div>
+      </div>
+
+      <div class="catalog__meta">
+        <span id="resultsCount">Загрузка…</span>
+        <button class="btn btn--ghost btn--sm" id="favoritesToggle">❤ Избранное (<span id="favCount">0</span>)</button>
+      </div>
+
+      <div class="catalog__grid" id="catalogGrid"></div>
+
+      <div class="catalog__more">
+        <button class="btn btn--outline btn--lg" id="loadMore">Показать ещё</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- КАК ЭТО РАБОТАЕТ -->
+  <section class="section steps" id="steps">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">Процесс</span>
+        <h2 class="section__title">Как мы работаем</h2>
+        <p class="section__lead">Полный цикл под ключ — от заявки до ключей в руках</p>
+      </div>
+      <ol class="steps__list">
+        <li class="step"><span class="step__num">01</span><h3>Заявка и бриф</h3><p>Уточняем бюджет, марку, комплектацию и сроки. Подписываем договор.</p></li>
+        <li class="step"><span class="step__num">02</span><h3>Подбор лотов</h3><p>Мониторим аукционы и дилеров, присылаем 5–10 вариантов с фото и историей.</p></li>
+        <li class="step"><span class="step__num">03</span><h3>Проверка и покупка</h3><p>Проверяем VIN, историю, состояние. Торгуемся и выкупаем авто.</p></li>
+        <li class="step"><span class="step__num">04</span><h3>Доставка и таможня</h3><p>Логистика до РФ, оформление документов, оплата пошлин.</p></li>
+        <li class="step"><span class="step__num">05</span><h3>СБКТС и ЭПТС</h3><p>Сертификация, получение ЭПТС, постановка на учёт в ГИБДД.</p></li>
+        <li class="step"><span class="step__num">06</span><h3>Ключи у вас</h3><p>Передаём авто в вашем городе. Гарантия и поддержка 12 месяцев.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ПРЕИМУЩЕСТВА -->
+  <section class="section advantages">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">Почему мы</span>
+        <h2 class="section__title">Преимущества AutoDrive</h2>
+      </div>
+      <div class="advantages__grid">
+        <div class="advantage"><span class="advantage__ico">🛡</span><h3>Договор и гарантия</h3><p>Официальный договор, фиксированная смета, гарантия 12 месяцев.</p></div>
+        <div class="advantage"><span class="advantage__ico">💸</span><h3>Фикс-цена</h3><p>Итоговая стоимость фиксируется в договоре — без скрытых доплат.</p></div>
+        <div class="advantage"><span class="advantage__ico">🔍</span><h3>Проверка VIN</h3><p>Полная история: пробег, ДТП, залоги, ограничения, сервис.</p></div>
+        <div class="advantage"><span class="advantage__ico">⚡</span><h3>Скорость</h3><p>Средний срок пригона — 30 дней. Отчитываемся на каждом этапе.</p></div>
+        <div class="advantage"><span class="advantage__ico">📄</span><h3>Всё под ключ</h3><p>СБКТС, ЭПТС, ГИБДД, страховка — берём на себя.</p></div>
+        <div class="advantage"><span class="advantage__ico">📞</span><h3>Личный менеджер</h3><p>Один менеджер на весь срок, на связи 7 дней в неделю.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОТЗЫВЫ -->
+  <section class="section reviews" id="reviews">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">Отзывы</span>
+        <h2 class="section__title">Клиенты о нас</h2>
+        <p class="section__lead">Более 4 800 клиентов уже получили свой автомобиль. Вот что они говорят.</p>
+      </div>
+      <div class="reviews__grid" id="reviewsGrid"></div>
+      <div class="reviews__more">
+        <button class="btn btn--outline btn--lg" id="loadMoreReviews">Показать ещё отзывы</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- КОНТАКТЫ -->
+  <section class="section contact" id="contact">
+    <div class="container contact__inner">
+      <div class="contact__info">
+        <span class="eyebrow">Заявка</span>
+        <h2 class="section__title">Подберём автомобиль бесплатно</h2>
+        <p class="section__lead">Напишите нам в мессенджер MAX — менеджер свяжется и подготовит подборку под ваш бюджет.</p>
+        <ul class="contact__list">
+          <li><span>📍</span>Россия</li>
+          <li><span>🕒</span>с 9:00 до 18:00 по Москве</li>
+        </ul>
+      </div>
+
+      <div class="contact__max-card">
+        <div class="contact__max-head">
+          <span class="contact__max-ico">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="48" height="48" rx="12" fill="url(#maxGrad2)"/>
+              <path d="M14 32V17.5c0-1.1.9-2 2-2h1.6c.7 0 1.3.3 1.7.9L24 23l4.7-6.6c.4-.6 1-.9 1.7-.9H32c1.1 0 2 .9 2 2V32h-4V23.2l-4.2 5.9c-.4.6-1 .9-1.8.9s-1.4-.3-1.8-.9L18 23.2V32h-4z" fill="#fff"/>
+              <defs>
+                <linearGradient id="maxGrad2" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#ff5a1f"/><stop offset="1" stop-color="#ff8a4c"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <div>
+            <h3>Мессенджер MAX</h3>
+            <p>Ответим в течение 15 минут</p>
+          </div>
+        </div>
+        <p class="contact__max-text">
+          Подберём автомобиль под ваш бюджет, пришлём варианты с аукционов и дилеров,
+          рассчитаем итоговую стоимость «под ключ» и сроки доставки.
+        </p>
+        <a class="btn btn--accent btn--lg btn--block" href="https://max.ru/u/f9LHodD0cOKCW0QXQMtYGIliqFM8HImAp_SXC81-MX50TsElWm4CZVcckRY" target="_blank" rel="noopener">
+          Написать в MAX →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="#hero" class="logo"><span class="logo__mark">AD</span><span class="logo__text">AutoDrive<small>import from europe</small></span></a>
+        <p>Пригон автомобилей под ключ из Европы с 2013 года.</p>
+      </div>
+      <nav class="footer__nav">
+        <h4>Навигация</h4>
+        <a href="#catalog">Каталог</a>
+        <a href="#countries">Направления</a>
+        <a href="#steps">Как это работает</a>
+        <a href="#reviews">Отзывы</a>
+      </nav>
+      <div class="footer__contacts">
+        <h4>Контакты</h4>
+        <span>Россия</span>
+        <span>с 9:00 до 18:00 по Москве</span>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <span>© 2025 AutoDrive. Все права защищены.</span>
+      <span>Не является публичной офертой.</span>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__box">
+      <button class="modal__close" data-close-modal aria-label="Закрыть">✕</button>
+      <div class="modal__content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="data-part2.js"></script>
+  <script src="reviews.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

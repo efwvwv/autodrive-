@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AutoDrive — парсер каталога</title>
+<style>
+  :root{color-scheme:dark light;--bg:#0b0d10;--card:#14181f;--line:#2a313c;--tx:#e9edf3;--mu:#8a94a3;--ac:#ff5a1f}
+  @media (prefers-color-scheme:light){:root{--bg:#f4f5f7;--card:#fff;--line:#d8dce3;--tx:#14181f;--mu:#5c6573}}
+  *{box-sizing:border-box}body{margin:0;padding:24px;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,sans-serif}
+  main{max-width:960px;margin:0 auto;display:grid;gap:18px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  h1{margin:0 0 4px;font-size:1.4rem}h2{margin:0 0 10px;font-size:1.05rem}p{margin:0 0 10px;color:var(--mu)}
+  textarea,pre{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:12px;font:12px/1.5 ui-monospace,monospace}
+  textarea{min-height:150px;resize:vertical}pre{max-height:220px;overflow:auto;white-space:pre-wrap;margin:0 0 10px}
+  button{background:var(--ac);color:#fff;border:0;border-radius:999px;padding:10px 20px;font-weight:700;cursor:pointer;margin-right:8px}
+  button.ghost{background:none;border:1px solid var(--line);color:var(--tx)}button:disabled{opacity:.4;cursor:not-allowed}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}.stats b{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.85rem}
+  .warn{color:#e0a800;font-size:.85rem;max-height:140px;overflow:auto;margin:0;padding-left:18px}
+  .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.8rem}th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+</style>
+</head>
+<body>
+<main>
+  <section>
+    <h1>Парсер каталога AutoDrive</h1>
+    <p>Превращает выгрузку с сайта-источника в готовый <b>data.js</b>: фото и описание берутся из одной карточки, поэтому совпадают.</p>
+  </section>
+
+  <section>
+    <h2>Шаг 1. Выгрузка с сайта</h2>
+    <p>Откройте каталог источника, нажимайте «Показать ещё» до конца списка, откройте консоль (F12) и выполните код. Результат окажется в буфере обмена.</p>
+    <pre id="snip">(() => {
+  const map = new Map();
+  document.querySelectorAll('img').forEach(img => {
+    if (!img.src.includes('/uploads/cars/')) return;
+    let el = img;
+    for (let i = 0; i &lt; 8 &amp;&amp; el.parentElement; i++) {
+      el = el.parentElement;
+      if (el.innerText &amp;&amp; el.innerText.trim().length &gt; 25) break;
+    }
+    const text = el.innerText.trim().replace(/\n+/g, ' | ');
+    if (!map.has(text)) map.set(text, []);
+    const a = map.get(text);
+    if (!a.includes(img.src)) a.push(img.src);
+  });
+  const out = [...map].map(([text, photos]) =&gt; ({ text, photos }));
+  copy(JSON.stringify(out));
+  console.log('Карточек:', out.length);
+})();</pre>
+    <button class="ghost" id="copySnip">Скопировать код</button>
+  </section>
+
+  <section>
+    <h2>Шаг 2. Вставьте выгрузку</h2>
+    <textarea id="raw" placeholder='[{"text":"1 / 9 | С пробегом | BMW X1 2022 | ...","photos":["https://..."]}]'></textarea>
+    <p style="margin:10px 0 0">Принимает и короткий формат <code>{"t":…,"p":[…]}</code>, и полный <code>{"text":…,"photos":[…]}</code>. Можно вставить несколько частей подряд.</p>
+    <div style="margin-top:12px"><button id="run">Разобрать</button><button class="ghost" id="download" disabled>Скачать data.js</button></div>
+  </section>
+
+  <section id="result" hidden>
+    <h2>Результат</h2>
+    <div class="stats" id="stats"></div>
+    <ul class="warn" id="warns"></ul>
+    <div class="tw"><table id="table"></table></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const BASE = 'https://www.businessauto24.ru/uploads/cars/';
+  const $ = (s) => document.querySelector(s);
+  const num = (s) => +String(s || '').replace(/[^\d.]/g, '');
+  const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+  const CYR = { 'А':'A','В':'B','Е':'E','К':'K','М':'M','Н':'H','О':'O','Р':'P','С':'C','Т':'T','Х':'X','а':'a','е':'e','о':'o','р':'p','с':'c','у':'y','х':'x' };
+  // «А3» и «Еlegance» с кириллическими буквами → латиница
+  const fixLatin = (s) => s.split(' ').map((t) =>
+    (/[A-Za-z0-9]/.test(t) && !/[А-Яа-яЁё]{2,}/.test(t)) ? t.replace(/[АВЕКМНОРСТХаеорсух]/g, (c) => CYR[c]) : t).join(' ');
+
+  function parseCard(text, photos) {
+    const p = text.split(' | ').map((s) => s.trim());
+    const pi = p.findIndex((s) => /₽$/.test(s));
+    if (pi < 3) return null;
+    const get = (k) => { const i = p.indexOf(k); return i >= 0 ? (p[i + 1] || '') : ''; };
+
+    const m = p[2].match(/^(.*?)\s+(\d{4})$/);
+    const name = fixLatin(m ? m[1] : p[2]).replace('Gran Coup', 'Gran Coupe').replace('RAV 4', 'RAV4');
+    const trim = fixLatin(p.slice(3, pi).join(' '));
+
+    let brand, model;
+    const multi = ['Range Rover', 'Land Rover', 'Mercedes-Benz', 'Alfa Romeo'].find((b) => name.startsWith(b + ' '));
+    if (multi) { brand = multi; model = name.slice(multi.length + 1); }
+    else { const sp = name.indexOf(' '); brand = sp > 0 ? name.slice(0, sp) : name; model = sp > 0 ? name.slice(sp + 1) : ''; }
+    if (model.startsWith(brand + ' ')) model = model.slice(brand.length + 1);
+    model = (model + ' ' + trim).trim();
+    if (model === brand) model = '';
+
+    const eng = get('Двигатель');
+    let engine = null;
+    const cc = eng.match(/(\d[\d\s]*)\s*[сc][мm]/i);
+    if (cc) engine = parseInt(cc[1].replace(/\s/g, ''), 10);
+    else { const l = eng.match(/(\d+[.,]\d+)/); if (l) engine = Math.round(parseFloat(l[1].replace(',', '.')) * 1000); }
+
+    const pw = get('Мощность');
+    const hp = pw.match(/(\d+)\s*л\.?\s*с/i);
+    const power = hp ? +hp[1] : (pw && !/кВт/i.test(pw) ? parseInt(pw, 10) || null : null);
+
+    const km = p.find((s) => /км$/.test(s));
+    const tr = get('КПП').toLowerCase();
+    const transmission = tr.startsWith('авто') ? 'Автомат' : tr.startsWith('мех') ? 'Механика'
+      : tr.startsWith('вар') ? 'Вариатор' : tr.startsWith('робот') ? 'Робот' : cap(tr);
+    const color = p[pi + 2] && p[pi + 2] !== 'Состояние' ? p[pi + 2] : '';
+
+    // Стабильный id из имени первого фото — не меняется при повторной выгрузке (избранное не «поедет»)
+    const id = 'c' + photos[0].split('/').pop().replace(/\.\w+$/, '').replace(/[^\w-]/g, '');
+    return {
+      id, brand, model, country: 'eu', countryLabel: 'Европа', countryFlag: '🇪🇺',
+      body: get('Кузов'), fuel: cap(get('Топливо')), engine, year: m ? +m[2] : 0,
+      price: num(p[pi]), power, mileage: km ? num(km) : null,
+      transmission, drive: get('Привод'), condition: p[1], color,
+      popular: false, rating: 0, photo: photos[0], photos
+    };
+  }
+
+  const normalize = (r) => ({
+    text: r.text || r.t || '',
+    photos: (r.photos || r.p || []).map((u) => /^https?:/.test(u) ? u : BASE + u)
+  });
+
+  // Принимает один массив или несколько, вставленных подряд
+  function readInput(str) {
+    const s = str.trim().replace(/\]\s*\[/g, ',');
+    return JSON.parse(s);
+  }
+
+  let cars = [];
+  $('#copySnip').onclick = () => navigator.clipboard.writeText($('#snip').textContent).then(() => ($('#copySnip').textContent = 'Скопировано ✓'));
+
+  $('#run').onclick = () => {
+    let raw;
+    try { raw = readInput($('#raw').value); } catch (e) { return alert('Не удалось прочитать JSON: ' + e.message); }
+    const seen = new Map(); const warns = [];
+    raw.map(normalize).forEach((r, i) => {
+      if (!r.photos.length) return warns.push('#' + (i + 1) + ': нет фото');
+      const c = parseCard(r.text, r.photos);
+      if (!c) return warns.push('#' + (i + 1) + ': не распознана карточка «' + r.text.slice(0, 50) + '…»');
+      if (seen.has(c.id)) { const o = seen.get(c.id); r.photos.forEach((u) => !o.photos.includes(u) && o.photos.push(u)); return; }
+      seen.set(c.id, c);
+    });
+    cars = [...seen.values()];
+    cars.forEach((c) => {
+      const n = c.brand + ' ' + c.model + ' ' + c.year;
+      if (!c.power) warns.push(n + ': нет мощности');
+      if (!c.engine) warns.push(n + ': нет объёма');
+      if (c.mileage == null) warns.push(n + ': нет пробега');
+      if (!c.price) warns.push(n + ': нет цены');
+    });
+    $('#stats').innerHTML = '<b>Авто: ' + cars.length + '</b><b>Фото: ' + cars.reduce((s, c) => s + c.photos.length, 0) + '</b><b>Предупреждений: ' + warns.length + '</b>';
+    $('#warns').innerHTML = warns.map((w) => '<li>' + w.replace(/</g, '&lt;') + '</li>').join('');
+    $('#table').innerHTML = '<tr><th>Авто</th><th>Год</th><th>Цена</th><th>Км</th><th>Л.с.</th><th>Кузов</th></tr>'
+      + cars.slice(0, 12).map((c) => '<tr><td>' + (c.brand + ' ' + c.model).replace(/</g, '&lt;') + '</td><td>' + c.year + '</td><td>' + c.price.toLocaleString('ru-RU') + '</td><td>' + (c.mileage ?? '—') + '</td><td>' + (c.power ?? '—') + '</td><td>' + c.body + '</td></tr>').join('');
+    $('#result').hidden = false; $('#download').disabled = !cars.length;
+  };
+
+  $('#download').onclick = () => {
+    const js = "(function () {\n  'use strict';\n  const CARS = [\n" + cars.map((c) => '    ' + JSON.stringify(c)).join(',\n')
+      + "\n  ];\n\n  window.AUTODRIVE_DATA = {\n    cars: CARS,\n    countryLabels: { eu: 'Европа', usa: 'США', kr: 'Корея', cn: 'Китай' }\n  };\n})();\n";
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([js], { type: 'text/javascript' }));
+    a.download = 'data.js'; a.click(); URL.revokeObjectURL(a.href);
+  };
+})();
+</script>
+</body>
+</html>
