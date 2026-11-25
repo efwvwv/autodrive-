@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* ВАШИ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ, НО Я ДОБАВИЛ СТИЛИ ДЛЯ MAX И ОТЗЫВОВ */
     :root{
       --graphite-950:#0b0d10; --graphite-900:#101318; --graphite-850:#14181f;
       --graphite-800:#1a1f27; --graphite-700:#232a35; --graphite-600:#2e3644;
@@ -144,6 +143,40 @@
     .review__author b{display:block;font-size:.92rem} .review__author small{color:var(--text-mute);font-size:.78rem}
     .reviews__more{text-align:center;margin-top:40px}
 
+    /* Стили для формы отзыва */
+    .review-form-wrapper {
+      margin-top: 48px;
+      background: linear-gradient(180deg, var(--graphite-850), var(--graphite-900));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+    }
+    .review-form-wrapper h3 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+    .review-form-wrapper p {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+    .review-form__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .review-form .field {
+      margin-bottom: 16px;
+    }
+    .review-form .btn {
+      margin-top: 8px;
+    }
+    @media (max-width: 640px) {
+      .review-form__row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* КОНТАКТЫ */
     .contact__inner{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
     .contact__list{display:flex;flex-direction:column;gap:14px;margin-top:28px}
@@ -213,6 +246,7 @@
       .footer__inner{grid-template-columns:1fr} .modal__box{padding:28px 22px;margin-top:4vh}
       .toasts{left:16px;right:16px;bottom:16px;max-width:none}
       .contact__max-card{padding:28px 24px}
+      .review-form-wrapper{padding:24px}
     }
   </style>
 </head>
@@ -235,7 +269,6 @@
       </nav>
 
       <div class="header__actions">
-        <!-- ВМЕСТО ТЕЛЕФОНА - ИКОНКА MAX -->
         <a class="header__max" href="https://max.ru/u/f9LHodD0cOKCW0QXQMtYGIliqFM8HImAp_SXC81-MX50TsElWm4CZVcckRY" target="_blank" rel="noopener" aria-label="Написать в MAX">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="48" height="48" rx="12" fill="url(#maxGrad)"/>
@@ -412,6 +445,29 @@
       <div class="reviews__grid" id="reviewsGrid"></div>
       <div class="reviews__more">
         <button class="btn btn--outline btn--lg" id="loadMoreReviews">Показать ещё отзывы</button>
+      </div>
+
+      <!-- Форма добавления отзыва -->
+      <div class="review-form-wrapper">
+        <h3>Оставить свой отзыв</h3>
+        <p>Расскажите о вашем опыте сотрудничества с AutoDrive</p>
+        <form id="addReviewForm" class="review-form">
+          <div class="review-form__row">
+            <label class="field">
+              <span>Ваше имя *</span>
+              <input type="text" name="name" placeholder="Иван" required />
+            </label>
+            <label class="field">
+              <span>Ваш город *</span>
+              <input type="text" name="city" placeholder="Москва" required />
+            </label>
+          </div>
+          <label class="field">
+            <span>Ваш отзыв *</span>
+            <textarea name="text" rows="4" placeholder="Какую машину пригоняли? Как всё прошло?" required></textarea>
+          </label>
+          <button type="submit" class="btn btn--accent btn--lg">Отправить отзыв</button>
+        </form>
       </div>
     </div>
   </section>
