@@ -3,8 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <meta name="description" content="CarHunter — пригон автомобилей под ключ из Европы." />
   <title>CarHunter — Пригон автомобилей из Европы</title>
+
+  <!-- КРАСИВОЕ ПРЕВЬЮ ДЛЯ СОЦСЕТЕЙ И МЕССЕНДЖЕРОВ (Open Graph) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://efwvwv.github.io/autodrive-/">
+  <meta property="og:title" content="CarHunter — Пригон автомобилей из Европы">
+  <meta property="og:description" content="Подбираем, проверяем и доставляем авто из Европы под ключ. Экономия до 40% от цены в салоне.">
+  <meta property="og:image" content="https://efwvwv.github.io/autodrive-/preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
@@ -248,14 +259,12 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header" id="header">
     <div class="container header__inner">
       <a href="#hero" class="logo" aria-label="CarHunter — на главную">
         <span class="logo__mark">CH</span>
         <span class="logo__text">CarHunter<small>import&nbsp;from&nbsp;europe</small></span>
       </a>
-
       <nav class="nav" id="nav">
         <a href="#catalog" class="nav__link">Каталог</a>
         <a href="#countries" class="nav__link">Направления</a>
@@ -263,7 +272,6 @@
         <a href="#reviews" class="nav__link">Отзывы</a>
         <a href="#contact" class="nav__link">Контакты</a>
       </nav>
-
       <div class="header__actions">
         <a class="header__max" href="https://max.ru/u/f9LHodD0cOKCW0QXQMtYGIliqFM8HImAp_SXC81-MX50TsElWm4CZVcckRY" target="_blank" rel="noopener" aria-label="Написать в MAX">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -285,7 +293,6 @@
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="container hero__inner">
       <div class="hero__content">
@@ -312,7 +319,6 @@
     </div>
   </section>
 
-  <!-- НАПРАВЛЕНИЯ -->
   <section class="section countries" id="countries">
     <div class="container">
       <div class="section__head">
@@ -336,7 +342,6 @@
     </div>
   </section>
 
-  <!-- КАТАЛОГ -->
   <section class="section catalog" id="catalog">
     <div class="container">
       <div class="section__head">
@@ -344,7 +349,6 @@
         <h2 class="section__title">Автомобили под заказ</h2>
         <p class="section__lead">Актуальные лоты под пригон. Цены указаны «под ключ» до вашего города.</p>
       </div>
-
       <div class="filters">
         <div class="filters__row">
           <label class="field"><span>Поиск</span><input type="search" id="searchInput" placeholder="BMW, Audi, Mercedes…" autocomplete="off" /></label>
@@ -379,21 +383,17 @@
           <button class="btn btn--ghost filters__reset" id="resetFilters">Сбросить</button>
         </div>
       </div>
-
       <div class="catalog__meta">
         <span id="resultsCount">Загрузка…</span>
         <button class="btn btn--ghost btn--sm" id="favoritesToggle">❤ Избранное (<span id="favCount">0</span>)</button>
       </div>
-
       <div class="catalog__grid" id="catalogGrid"></div>
-
       <div class="catalog__more">
         <button class="btn btn--outline btn--lg" id="loadMore">Показать ещё</button>
       </div>
     </div>
   </section>
 
-  <!-- КАК ЭТО РАБОТАЕТ -->
   <section class="section steps" id="steps">
     <div class="container">
       <div class="section__head">
@@ -412,7 +412,6 @@
     </div>
   </section>
 
-  <!-- ПРЕИМУЩЕСТВА -->
   <section class="section advantages">
     <div class="container">
       <div class="section__head">
@@ -430,7 +429,6 @@
     </div>
   </section>
 
-  <!-- ОТЗЫВЫ -->
   <section class="section reviews" id="reviews">
     <div class="container">
       <div class="section__head">
@@ -442,8 +440,6 @@
       <div class="reviews__more">
         <button class="btn btn--outline btn--lg" id="loadMoreReviews">Показать ещё отзывы</button>
       </div>
-
-      <!-- Форма добавления отзыва -->
       <div class="review-form-wrapper">
         <h3>Оставить свой отзыв</h3>
         <p>Расскажите о вашем опыте сотрудничества с CarHunter</p>
@@ -468,7 +464,6 @@
     </div>
   </section>
 
-  <!-- КОНТАКТЫ -->
   <section class="section contact" id="contact">
     <div class="container contact__inner">
       <div class="contact__info">
@@ -480,7 +475,6 @@
           <li><span>🕒</span>с 9:00 до 18:00 по Москве</li>
         </ul>
       </div>
-
       <div class="contact__max-card">
         <div class="contact__max-head">
           <span class="contact__max-ico">
@@ -510,7 +504,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
