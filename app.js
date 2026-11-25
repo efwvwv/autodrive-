@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     nav: $('#nav'),
     header: $('#header'),
     reviewsGrid: $('#reviewsGrid'),
-    loadMoreReviews: $('#loadMoreReviews')
+    loadMoreReviews: $('#loadMoreReviews'),
+    addReviewForm: $('#addReviewForm') // Новая форма
   };
 
   // 4. Утилиты
@@ -257,7 +258,20 @@ document.addEventListener('DOMContentLoaded', () => {
     state.visibleReviews += 6; renderReviews();
   });
 
-  // 10. Мобильное меню и скролл
+  // 10. Обработка формы отзыва
+  if (dom.addReviewForm) {
+    dom.addReviewForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // Останавливаем перезагрузку страницы
+      
+      // Показываем уведомление
+      showToast('Ваш отзыв успешно отправлен! Спасибо!');
+      
+      // Очищаем форму
+      dom.addReviewForm.reset();
+    });
+  }
+
+  // 11. Мобильное меню и скролл
   if (dom.burger) dom.burger.addEventListener('click', () => {
     const isOpen = dom.nav.classList.toggle('is-open');
     dom.burger.setAttribute('aria-expanded', isOpen);
@@ -270,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else dom.header.classList.remove('is-scrolled');
   });
 
-  // 11. Старт
+  // 12. Старт
   updateFavCount();
   renderCatalog();
   renderReviews();
