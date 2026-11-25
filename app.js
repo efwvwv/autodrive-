@@ -7,15 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const carsData = (window.AUTODRIVE_DATA && window.AUTODRIVE_DATA.cars) ? window.AUTODRIVE_DATA.cars : [];
   const reviewsData = window.AUTODRIVE_REVIEWS || [];
   
-  if (carsData.length === 0) console.warn('AutoDrive: данные машин не загружены');
-  if (reviewsData.length === 0) console.warn('AutoDrive: данные отзывов не загружены');
+  if (carsData.length === 0) console.warn('CarHunter: данные машин не загружены');
+  if (reviewsData.length === 0) console.warn('CarHunter: данные отзывов не загружены');
 
   // 2. Состояние
   const state = {
     filteredCars: [...carsData],
     visibleCount: 6,
     visibleReviews: 6,
-    favorites: JSON.parse(localStorage.getItem('autodrive_favs')) || [],
+    favorites: JSON.parse(localStorage.getItem('carhunter_favs')) || [],
     filters: {
       search: '',
       country: 'all',
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     header: $('#header'),
     reviewsGrid: $('#reviewsGrid'),
     loadMoreReviews: $('#loadMoreReviews'),
-    addReviewForm: $('#addReviewForm') // Новая форма
+    addReviewForm: $('#addReviewForm')
   };
 
   // 4. Утилиты
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 7. Избранное
   function updateFavCount() {
     if (dom.favCount) dom.favCount.textContent = state.favorites.length;
-    localStorage.setItem('autodrive_favs', JSON.stringify(state.favorites));
+    localStorage.setItem('carhunter_favs', JSON.stringify(state.favorites));
   }
 
   if (dom.catalogGrid) dom.catalogGrid.addEventListener('click', e => {
@@ -261,12 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 10. Обработка формы отзыва
   if (dom.addReviewForm) {
     dom.addReviewForm.addEventListener('submit', (e) => {
-      e.preventDefault(); // Останавливаем перезагрузку страницы
-      
-      // Показываем уведомление
+      e.preventDefault();
       showToast('Ваш отзыв успешно отправлен! Спасибо!');
-      
-      // Очищаем форму
       dom.addReviewForm.reset();
     });
   }
